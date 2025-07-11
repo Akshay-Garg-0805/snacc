@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "./context/AuthContext";
@@ -15,7 +15,7 @@ import { HashtagService } from "@/lib/hashtagService";
 import { motion } from "framer-motion";
 import { Meme } from "@/types/meme";
 
-export default function ExplorePage() {
+function ExplorePageContent() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const [memes, setMemes] = useState<Meme[]>([]);
@@ -294,5 +294,13 @@ export default function ExplorePage() {
         )}
       </div>
     </motion.div>
+  );
+}
+
+export default function ExplorePage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen">Loading...</div>}>
+      <ExplorePageContent />
+    </Suspense>
   );
 }
